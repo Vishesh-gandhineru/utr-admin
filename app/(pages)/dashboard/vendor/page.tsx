@@ -6,7 +6,7 @@ const page = () => {
     <DashboardLayout>
       <div>
         <div>
-        <h1 className='px-4 md:px-6'>Vendor</h1>
+        <h1 className="my-8 text-2xl">All Vendor</h1>
         </div>
         <div className='grid grid-cols-2 gap-8'>
         <VendorCard />

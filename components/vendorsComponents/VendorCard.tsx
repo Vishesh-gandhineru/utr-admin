@@ -2,6 +2,8 @@
 import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { CardTitle, CardDescription, CardHeader, CardContent, CardFooter, Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
+
 
 export default function VendorCard() {
   return (
@@ -12,7 +14,7 @@ export default function VendorCard() {
           <AvatarFallback>JD</AvatarFallback>
         </Avatar>
         <div className="space-y-1">
-          <CardTitle>John Doe</CardTitle>
+          <CardTitle>{"John Doe (Stay vista)"}</CardTitle>
           <CardDescription className="text-gray-500 dark:text-gray-400">Property Vendor</CardDescription>
         </div>
       </CardHeader>
@@ -42,8 +44,8 @@ export default function VendorCard() {
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button size="sm" variant="outline" className="w-full">
-          View Profile
+        <Button asChild size="sm" variant="outline" className="w-full">
+         <Link href="/dashboard/vendor/stayvista">View Profile</Link> 
         </Button>
       </CardFooter>
     </Card>

@@ -2,7 +2,7 @@ export const BookingAPI = [
     {
         "id": 1,
         "vendor": "Stay Vista",
-        "status": "upcoming",
+        "status": "completed",
         "PropertyName": "Cozy Mountain Retreat",
         "checkIn": "June 1, 2023",
         "checkOut": "June 5, 2023",
@@ -22,7 +22,7 @@ export const BookingAPI = [
     {
         "id": 3,
         "vendor": "Booking.com",
-        "status": "completed",
+        "status": "upcoming",
         "PropertyName": "City View Apartment",
         "checkIn": "August 5, 2023",
         "check-out": "August 10, 2023",
@@ -42,7 +42,7 @@ export const BookingAPI = [
     {
         "id": 5,
         "vendor": "Stay Vista",
-        "status": "completed",
+        "status": "cancelled",
         "PropertyName": "Cozy Mountain Retreat",
         "checkIn": "June 1, 2023",
         "checkOut": "June 5, 2023",
@@ -72,7 +72,7 @@ export const BookingAPI = [
     {
         "id": 8,
         "vendor": "Airbnb",
-        "status": "cancelled",
+        "status": "completed",
         "PropertyName": "Riverside Cabin",
         "checkIn": "September 1, 2023",
         "checkOut": "September 5, 2023",
@@ -112,7 +112,7 @@ export const BookingAPI = [
     {
         "id": 12,
         "vendor": "Airbnb",
-        "status": "cancelled",
+        "status": "upcoming",
         "PropertyName": "Riverside Cabin",
         "checkIn": "September 1, 2023",
         "checkOut": "September 5, 2023",
@@ -132,7 +132,7 @@ export const BookingAPI = [
     {
         "id": 14,
         "vendor": "Expedia",
-        "status": "completed",
+        "status": "cancelled",
         "PropertyName": "Luxury Beach House",
         "checkIn": "July 10, 2023",
         "checkOut": "July 15, 2023",
@@ -142,7 +142,7 @@ export const BookingAPI = [
     {
         "id": 15,
         "vendor": "Booking.com",
-        "status": "completed",
+        "status": "cancelled",
         "PropertyName": "City View Apartment",
         "checkIn": "August 5, 2023",
         "checkOut": "August 10, 2023",

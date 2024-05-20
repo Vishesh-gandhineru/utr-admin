@@ -1,9 +1,17 @@
 import React from 'react'
 import DashboardLayout from '@/components/DashboardLayout/DashboardLayout'
+import CustomerProfileCard from '@/components/CustomerCard/CustomerProfileCard'
 const page = () => {
   return (
     <DashboardLayout>
-        <div className='px-4 md:px-6'>Customer</div>
+        <div><h2 className='text-3xl mb-8'>Customer</h2></div>
+        <div className='grid grid-cols-3 gap-6'>
+        <CustomerProfileCard />
+        <CustomerProfileCard />
+        <CustomerProfileCard />
+        <CustomerProfileCard />
+        <CustomerProfileCard />
+        </div>
     </DashboardLayout>
   )
 }
