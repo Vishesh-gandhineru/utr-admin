@@ -230,7 +230,7 @@ const VendorSinglePage = ({ params }: VendorSinglePageProps) => {
                         <StarIcon className="w-4 h-4 fill-muted stroke-muted-foreground" />
                       </div>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
-                        I'm very satisfied with my purchase. The product is
+                        Im very satisfied with my purchase. The product is
                         exactly as described and the shipping was fast.
                       </p>
                     </div>
@@ -265,7 +265,7 @@ const VendorSinglePage = ({ params }: VendorSinglePageProps) => {
  
         {BookingAPI.filter(booking => booking.status === `${search ? search : "upcoming"}` && booking.vendor === "Stay Vista").map(booking => {
     
-      if (!booking) return <p>NO Booking Found</p>;    
+      if (!booking) return <p key="noFound">NO Booking Found</p>;    
   return (
       <BookingCard data={booking} key={booking.id} />
   )
