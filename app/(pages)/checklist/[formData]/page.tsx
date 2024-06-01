@@ -1,3 +1,4 @@
+
 import React from 'react'
 import { CheckListForm } from '@/components/ChecklistForm/CheckListForm'
 import {
@@ -11,7 +12,11 @@ import {
 
   import { CheckListOptions } from "@/lib/ChecklistOptions";
 
-const CheckList = () => {
+const CheckList = ({ params }: { params: { formData: string } }) => {
+
+    const decodedFormData = decodeURIComponent(params.formData);
+    const parsedFormData= JSON.parse(decodedFormData);
+
 
   return (
     <section className='my-10 flex justify-center items-center'>
@@ -21,7 +26,7 @@ const CheckList = () => {
     <CardDescription>Under the Roof Stay Villa property CheckList</CardDescription>
   </CardHeader>
   <CardContent className='w-full'>
-  <CheckListForm CheckListOptions={CheckListOptions}/>
+  <CheckListForm newAmenity={parsedFormData}/>
   </CardContent>
 </Card>
     </section>

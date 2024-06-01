@@ -1,9 +1,8 @@
 "use server"
 
 import { Resend } from 'resend'
-import CheckListEmail from '@/emails/checkListEmail';
-import { json } from 'stream/consumers';
-import { string } from 'zod';
+import CheckListEmail from '@/emails/CheckListEmail';
+
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 

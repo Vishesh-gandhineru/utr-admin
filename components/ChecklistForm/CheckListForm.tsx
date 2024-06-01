@@ -2,8 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useState } from "react";
+import { string, z } from "zod";
+import { useState , useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,11 +16,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { CheckListOptions } from "@/lib/ChecklistOptions";
+// import { CheckListOptions } from "@/lib/ChecklistOptions";
 import { Separator } from "../ui/separator";
 import { SendEmail } from "@/actions/SendEmail";
-import { assert } from "console";
-import { send } from "process";
+import { useSearchParams } from 'next/navigation'
 
 const formSchema = z.object({
   propertyName: z.string().min(2, {
@@ -38,18 +37,25 @@ const formSchema = z.object({
   }),
   onSiteCareTakerName: z.string().min(2, {
     message: "On Site Care Taker Name must be at least 2 characters.",
-  
   }),
 });
 
-export function CheckListForm() {
+type Amenity = {
+  amenityId: string;
+  amenityName: string;
+};
+
+type newAmenity = {
+  newAmenity: Amenity[];
+}
+
+
+export function CheckListForm({newAmenity} : newAmenity) {
   const [Steps, setSteps] = useState(1);
   const [Loading, setLoading] = useState(false);
-  const [EmailMessage, setEmailMessage] = useState("")
-
-  // Create a useState to store all the amunities as an object with its name and checked value.
+  const [EmailMessage, setEmailMessage] = useState("");
   // defualt all to false
-  const [Amenities, setAmenities] = useState<Record<string, boolean>>({}); // { "odour": false, "ms": false, ... }
+  const [Amenities, setAmenities] = useState<Record<string, boolean>>({});
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -64,7 +70,7 @@ export function CheckListForm() {
     },
   });
 
-  CheckListOptions.map((amenity, index) => {
+  newAmenity.map((amenity, index) => {
     if (Amenities[amenity.amenityName] === undefined) {
       setAmenities((prev) => ({
         ...prev,
@@ -73,32 +79,25 @@ export function CheckListForm() {
     }
   });
 
-  const onSubmit = async(values: z.infer<typeof formSchema>) => {
-    const UpdatedFormData = {...values, Amenities};
-    setLoading(true)
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const UpdatedFormData = { ...values, Amenities };
+    setLoading(true);
     const sendEmail = await SendEmail(UpdatedFormData);
     //ignore the error
-    if(sendEmail){
-      setLoading(false)
-      setEmailMessage("Email Sent Successfully")
-    }else{
-      setEmailMessage("Email Not Sent")
+    if (sendEmail) {
+      setLoading(false);
+      setEmailMessage("Email Sent Successfully");
+    } else {
+      setEmailMessage("Email Not Sent");
     }
+  };
 
-  }
- 
-  // // 2. Define a submit handler.
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   const UpdatedFormData = {...values, Amenities};
-  //   SendEmail();
-  //   // console.log(values, Amenities);
-  // }
-
+  
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col gap-7"       
+        className="flex flex-col gap-7"
       >
         {/* step 1 */}
         <div
@@ -199,40 +198,43 @@ export function CheckListForm() {
             hidden: Steps !== 2,
           })}
         >
-            <div className="flex justify-between">
-                <span>Name of the Amenity</span>
-                <span>Status <span className="text-14px">if working then mark the status</span></span>
-            </div>
-            <Separator />
-          {CheckListOptions.map((amenity, index) => {
+          <div className="flex justify-between">
+            <span>Name of the Amenity</span>
+            <span>
+              Status{" "}
+              <span className="text-14px">if working then mark the status</span>
+            </span>
+          </div>
+          <Separator />
+          {newAmenity.map((amenity, index) => {
             return (
-                <div className="flex flex-col gap-5" key={amenity.amenityId}>                  
-                    <FormField
-                      name={amenity.amenityId}
-                      render={({}) => (
-                        <FormItem className="flex flex-row justify-between items-center w-full">
-                          <FormLabel className="w-[100%] capitalize">{amenity.amenityName} </FormLabel>
-                          <FormControl className="w-[10%]">
-                            <Input
-                              type="checkbox"
-                              onChange={() => {
-                                setAmenities((prev) => ({
-                                  ...prev,
-                                  // Toggle the value.
-                                  [amenity.amenityName]: !prev[amenity.amenityName],
-                                }));
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                        <Separator />
-
-                </div>
+              <div className="flex flex-col gap-5" key={amenity.amenityId}>
+                <FormField
+                  name={amenity.amenityId}
+                  render={({}) => (
+                    <FormItem className="flex flex-row justify-between items-center w-full">
+                      <FormLabel className="w-[100%] capitalize">
+                        {amenity.amenityName}{" "}
+                      </FormLabel>
+                      <FormControl className="w-[10%]">
+                        <Input
+                          type="checkbox"
+                          onChange={() => {
+                            setAmenities((prev) => ({
+                              ...prev,
+                              // Toggle the value.
+                              [amenity.amenityName]: !prev[amenity.amenityName],
+                            }));
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Separator />
+              </div>
             );
-            
           })}
         </div>
 
@@ -255,22 +257,33 @@ export function CheckListForm() {
             })}
             onClick={() => {
               //validate
-              form.trigger(['propertyName', 'bookingId','checkConductedBy','onSiteCareTakerName','propertyManagerName','dateOfCheck'])
-              const propertyname = form.getFieldState('propertyName')
-              const bookingId = form.getFieldState('bookingId')
-              const checkConductedBy = form.getFieldState('checkConductedBy')
-              const onSiteCareTakerName = form.getFieldState('onSiteCareTakerName')
-              const propertyManagerName = form.getFieldState('propertyManagerName')
-              const dateOfCheck = form.getFieldState('dateOfCheck')
-              
+              form.trigger([
+                "propertyName",
+                "bookingId",
+                "checkConductedBy",
+                "onSiteCareTakerName",
+                "propertyManagerName",
+                "dateOfCheck",
+              ]);
+              const propertyname = form.getFieldState("propertyName");
+              const bookingId = form.getFieldState("bookingId");
+              const checkConductedBy = form.getFieldState("checkConductedBy");
+              const onSiteCareTakerName = form.getFieldState(
+                "onSiteCareTakerName"
+              );
+              const propertyManagerName = form.getFieldState(
+                "propertyManagerName"
+              );
+              const dateOfCheck = form.getFieldState("dateOfCheck");
 
-              if(!propertyname.isDirty || propertyname.invalid ) return
-              if(!bookingId.isDirty || bookingId.invalid ) return
-              if(!checkConductedBy.isDirty || checkConductedBy.invalid ) return
-              if(!onSiteCareTakerName.isDirty || onSiteCareTakerName.invalid ) return
-              if(!propertyManagerName.isDirty || propertyManagerName.invalid ) return
-              if(!dateOfCheck.isDirty || dateOfCheck.invalid ) return
-              
+              if (!propertyname.isDirty || propertyname.invalid) return;
+              if (!bookingId.isDirty || bookingId.invalid) return;
+              if (!checkConductedBy.isDirty || checkConductedBy.invalid) return;
+              if (!onSiteCareTakerName.isDirty || onSiteCareTakerName.invalid)
+                return;
+              if (!propertyManagerName.isDirty || propertyManagerName.invalid)
+                return;
+              if (!dateOfCheck.isDirty || dateOfCheck.invalid) return;
 
               setSteps((perv) => perv + 1);
             }}
@@ -289,6 +302,7 @@ export function CheckListForm() {
           >
             <ChevronLeft className="w-4 h-4 mr-2" /> Perv
           </Button>
+          
           <div>{EmailMessage}</div>
         </div>
       </form>
