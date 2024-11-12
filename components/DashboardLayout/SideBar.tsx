@@ -96,7 +96,7 @@ export default function SideBar() {
       <SidebarContent>
         <SidebarMenu>
           {menuItems.map((item) => (         
-              <SidebarMenuItem>             
+              <SidebarMenuItem key={item.id}>             
                <Link href={item.href}>
                   <SidebarMenuButton tooltip={item.name}>
                     <item.icon />
